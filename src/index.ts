@@ -45,7 +45,8 @@ const BULTIIN_CONSTRUCTORS: {
         Boolean: toBoolean,
         String,
         ObjectID: (value: string) => new ObjectID(value),
-        Date: (value?: string | number | Date) => value ? new Date(value) : new Date()
+        Date: (value?: string | number | Date) => value ? new Date(value) : new Date(),
+        Null: () => null
     },
     json: {
         Number,
@@ -55,7 +56,8 @@ const BULTIIN_CONSTRUCTORS: {
         Date: (value?: string | number | Date) => ({
             __type: 'Date',
             value: value ? new Date(value) : new Date()
-        })
+        }),
+        Null: () => ({ __type: 'Null' })
     }
 }
 
@@ -208,7 +210,7 @@ export const ValueParser = (tokens: string[], context: Context) => {
                 return context.constructors.Boolean(token)
             }
             else if (token === 'null') {
-                return null
+                return context.constructors.Null()
             }
             else if (token in context.variables) {
                 return context.variables[token]
